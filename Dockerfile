@@ -52,21 +52,20 @@ RUN cd $ROOTFS/lib/modules && \
 # prepare the build directory with the kernel
 RUN cp -v /tmp/kernel/arch/x86_64/boot/bzImage /tmp/iso/boot/vmlinuz64
 
-# create directories which the file systems will be mounted
-RUN for i in dev proc sys run; do mkdir -p $ROOTFS/$i; done
+ENV BUSYBOX_VERSION 1.23.2
 
-# when the kernel boots the system, it requires the presence of a few device nodes,
-# in particular the console and null devices. The device nodes must be created on
-# the hard disk so that they are available before udevd has been started, and
-# additionally when Linux is started with init=/bin/bash
-RUN mknod -m 600 $ROOTFS/dev/console c 5 1
-RUN mknod -m 666 $ROOTFS/dev/null c 1 3
+RUN curl http://www.busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2 | tar -C / -xj && \
+    mv /busybox-$BUSYBOX_VERSION /tmp/busybox
+
+COPY busybox_config /tmp/busybox/.config
+RUN cd /tmp/busybox && \
+    make && \
+    make install
 
 # add our own custom ROOTFS
 COPY rootfs $ROOTFS
 
 COPY make_iso.sh /
-
 RUN /make_iso.sh
 
 CMD ["cat", "wharf.iso"]
