@@ -13,9 +13,9 @@ find | ( set -x; cpio -o -H newc | xz -9 --format=lzma --verbose --verbose ) > /
 cd -
 
 # Make the ISO
-xorriso  \
-    -publisher "bacongobbler" \
-    -as mkisofs \
-    -l -J -R -V "WharfOS-v$(cat $ROOTFS/etc/version)" \
+mkisofs  \
+    -publisher "Fishworks Development and Consulting" \
+    -l -J -R -V "Wharf-v$(cat $ROOTFS/etc/version)" \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
+    -b boot/isolinux/isolinux.bin -c boot/isolinux/boot.cat \
     -o /wharf.iso /tmp/iso
