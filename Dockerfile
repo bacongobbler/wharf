@@ -53,7 +53,7 @@ RUN cd $ROOTFS/lib/modules && \
 RUN cp /tmp/kernel/arch/x86_64/boot/bzImage /tmp/iso/boot/vmlinuz64
 
 ENV BUSYBOX_VERSION 1.23.2
-RUN curl http://www.busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2 | tar -C / -xj && \
+RUN curl https://busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2 | tar -C / -xj && \
     mv /busybox-$BUSYBOX_VERSION /tmp/busybox
 
 COPY busybox_config /tmp/busybox/.config
